@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Monthly Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    h1, h2 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <h1>📊 Smart Expense Tracker</h1>
+  <h2>Monthly Report - {{ month }}/{{ year }}</h2>
+  <p>User: {{ user.username }} ({{ user.email }})</p>
+
+  <h3>Budget Summary</h3>
+  <table>
+    <tr>
+      <th>Category</th>
+      <th>Budget</th>
+      <th>Spent</th>
+      <th>Remaining</th>
+      <th>% Used</th>
+      <th>Status</th>
+    </tr>
+    {% for b in summary %}
+    <tr>
+      <td>{{ b.category_name }}</td>
+      <td>{{ b.budget_amount }}</td>
+      <td>{{ b.spent_amount }}</td>
+      <td>{{ b.remaining }}</td>
+      <td>{{ b.percent_used }}%</td>
+      <td>{% if b.over_budget %}Over Budget{% elif b.near_limit %}Near Limit{% else %}OK{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h3>Expense Details</h3>
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Amount</th>
+    </tr>
+    {% for e in expenses %}
+    <tr>
+      <td>{{ e.expense_date }}</td>
+      <td>{{ e.category.category_name }}</td>
+      <td>{{ e.title }} - {{ e.description }}</td>
+      <td>{{ e.expense_amount }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h3>Totals & Insights</h3>
+  <p>Total Budget: {{ total_budget }}</p>
+  <p>Total Spent: {{ total_spent }}</p>
+  <p>Overspending: {{ total_spent - total_budget if total_spent > total_budget else 0 }}</p>
+  <p>Remaining Budget: {{ total_budget - total_spent if total_spent < total_budget else 0 }}</p>
+</body>
+</html>
