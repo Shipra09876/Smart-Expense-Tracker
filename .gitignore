@@ -25,6 +25,8 @@ postgres_data/
 *.pid
 
 # OS files
+
+
 .DS_Store
 # Credentials / Keys
 google-vision-key.json

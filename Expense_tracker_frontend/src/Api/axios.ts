@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://54.174.198.97:8001/api/";
+const BASE_URL = "http://54.242.166.239:8001/api/";
 
 /* ===============================
    ACCOUNT API (Login/Register)
