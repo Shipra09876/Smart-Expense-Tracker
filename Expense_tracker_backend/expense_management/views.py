@@ -25,15 +25,14 @@ class AddIncome(APIView):
     permission_classes=[IsAuthenticated]
     renderer_classes=[JSONRenderer]
     def post(self,request):
-        data=request.data.copy()
-        data['user'] = request.user.id
+        # data=request.data.copy()
+        # data['user'] = request.user.id
         serializer=IncomeSerializer(data=request.data.copy())
         if serializer.is_valid():
             income=serializer.save(user=request.user)
             
             # update wallet
             SpilitIncome(request.user,income.amount)
-
             return Response({
             "msg":"Income added successfully and wallet updated successfully"
             },status=status.HTTP_200_OK)
@@ -60,13 +59,25 @@ class EditIncome(APIView):
         return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
     
 class ViewIncome(APIView):
-    permission_classes=[IsAuthenticated]
-    renderer_classes=[JSONRenderer]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
 
-    def get(self,request):
-        incomes=Income.objects.filter(user=request.user)
-        serializer=IncomeSerializer(incomes,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+    def get(self, request):
+
+        month = request.query_params.get("month")
+        year = request.query_params.get("year")
+
+        incomes = Income.objects.filter(user=request.user)
+
+        if month:
+            incomes = incomes.filter(month=month)
+
+        if year:
+            incomes = incomes.filter(year=year)
+
+        serializer = IncomeSerializer(incomes, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 class ViewIncomeById(APIView):

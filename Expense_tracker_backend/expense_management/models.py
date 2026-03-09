@@ -70,7 +70,7 @@ class Income(models.Model):
     received_on=models.DateField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'month', 'year')
+        unique_together = ('user', 'month', 'year','source')
 
     def __str__(self):
         return f"{self.user} - ₹{self.amount}"

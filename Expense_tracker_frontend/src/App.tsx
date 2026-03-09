@@ -8,6 +8,7 @@ import OtpLogin from "./pages/OtpLogin";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Income from "./pages/Income";
+import AddIncome from "./pages/AddIncome";
 import WalletCard from "./pages/WalletCard";
 import Expense from "./pages/Expense";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -69,6 +70,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/add-income" element={<AddIncome />} />
         <Route path="/otp-login" element={<OtpLogin />} />
       </Routes>
     </BrowserRouter>

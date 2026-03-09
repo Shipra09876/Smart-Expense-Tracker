@@ -53,10 +53,10 @@ class IncomeSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'amount', 'source', 'month', 'year', 'received_on']
         read_only_fields = ['user', 'received_on']
 
-    def create(self, validated_data):
-        request = self.context.get('request')
-        validated_data['user'] = request.user
-        return super().create(validated_data)
+    # def create(self, validated_data):
+    #     request = self.context.get('request')
+    #     validated_data['user'] = request.user
+    #     return super().create(validated_data)
 
 
 class BudgetSerializer(serializers.ModelSerializer):
