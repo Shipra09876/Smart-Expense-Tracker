@@ -29,7 +29,7 @@ class AddIncome(APIView):
             data=request.data,
             context={"request":request}
         )
-        
+
         if serializer.is_valid():
             income=serializer.save(user=request.user)
             
@@ -50,7 +50,7 @@ class EditIncome(APIView):
         except Income.DoesNotExist:
             return Response({"error": "Income not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer=IncomeSerializer(instance=income_obj, data=request.data,partial=True)
+        serializer=IncomeSerializer(instance=income_obj, data=request.data,partial=True,context={"request":request})
 
         if serializer.is_valid():
             serializer.save()

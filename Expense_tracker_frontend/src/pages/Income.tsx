@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { ExpenseAPI } from "../Api/axios";
 import DashboardLayout from "../layouts/DashboardLayout";
 import { useNavigate } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
 
 function Income() {
-
   const navigate = useNavigate();
 
   const [incomes, setIncomes] = useState<any[]>([]);
@@ -13,35 +13,24 @@ function Income() {
   const [search, setSearch] = useState("");
 
   const fetchIncome = async () => {
-
-    const res = await ExpenseAPI.get(
-      `ListIncome/?month=${month}&year=${year}`
-    );
+    const res = await ExpenseAPI.get(`ListIncome/?month=${month}&year=${year}`);
 
     setIncomes(res.data);
-
   };
 
   useEffect(() => {
     fetchIncome();
   }, [month]);
 
-  const totalIncome = incomes.reduce(
-    (sum, inc) => sum + Number(inc.amount),
-    0
-  );
+  const totalIncome = incomes.reduce((sum, inc) => sum + Number(inc.amount), 0);
 
   const filteredIncome = incomes.filter((inc) =>
-    (inc.source || "")
-      .toLowerCase()
-      .includes(search.toLowerCase())
+    (inc.source || "").toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <DashboardLayout>
-
       <div className="flex justify-between items-center mb-6">
-
         <h1 className="text-3xl font-bold">Income</h1>
 
         <button
@@ -50,27 +39,21 @@ function Income() {
         >
           + Add Income
         </button>
-
       </div>
 
       {/* TOTAL INCOME */}
 
       <div className="bg-white/10 p-6 rounded-xl mb-6">
-
         <h2 className="text-lg text-gray-300">
           Total Income ({month}/{year})
         </h2>
 
-        <p className="text-3xl font-bold text-green-400">
-          ₹{totalIncome}
-        </p>
-
+        <p className="text-3xl font-bold text-green-400">₹{totalIncome}</p>
       </div>
 
       {/* FILTERS */}
 
       <div className="flex gap-4 mb-6">
-
         <select
           className="p-2 rounded bg-white/10"
           value={month}
@@ -88,42 +71,35 @@ function Income() {
           className="p-2 rounded bg-white/10"
           onChange={(e) => setSearch(e.target.value)}
         />
-
       </div>
 
       {/* INCOME LIST */}
 
       <div className="space-y-3">
-
         {filteredIncome.map((inc) => (
-
           <div
             key={inc.id}
             className="bg-white/10 p-4 rounded-lg flex justify-between"
           >
-
             <div>
-
-              <p className="font-semibold">
-                {inc.source || "Income"}
-              </p>
+              <p className="font-semibold">{inc.source || "Income"}</p>
 
               <p className="text-gray-400 text-sm">
                 {inc.month}/{inc.year}
               </p>
-
             </div>
 
-            <p className="text-green-400 font-bold">
-              ₹{inc.amount}
-            </p>
+            <p className="text-green-400 font-bold">₹{inc.amount}</p>
 
+            {/* ⭐ EDIT BUTTON */}
+            <FaEdit
+              className="cursor-pointer text-gray-300 hover:text-white"
+              onClick={() => navigate(`/edit-income/${inc.id}`)}
+            />
+            
           </div>
-
         ))}
-
       </div>
-
     </DashboardLayout>
   );
 }

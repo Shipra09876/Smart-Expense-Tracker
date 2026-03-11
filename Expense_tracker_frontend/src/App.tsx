@@ -11,6 +11,7 @@ import Income from "./pages/Income";
 import AddIncome from "./pages/AddIncome";
 import WalletCard from "./pages/WalletCard";
 import Expense from "./pages/Expense";
+import EditIncome from "./pages/EditIncome";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
         />
         <Route path="/add-income" element={<AddIncome />} />
         <Route path="/otp-login" element={<OtpLogin />} />
+        <Route path="/edit-income/:id" element={<EditIncome />} />
       </Routes>
     </BrowserRouter>
   );
