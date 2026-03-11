@@ -50,17 +50,26 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class IncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Income
-        fields = ['id', 'user', 'amount', 'source', 'month', 'year', 'received_on']
-        read_only_fields = ['user', 'received_on']
-    
+        fields = ['id','user','amount','source','month','year','received_on']
+        read_only_fields = ['user','received_on']
+
     def validate(self, data):
-        user = self.context['request'].user
+        request = self.context.get("request")
+        user = request.user
+
         source = data.get("source")
         month = data.get("month")
         year = data.get("year")
 
-        if Income.objects.filter(user=user, source=source, month=month, year=year).exists():
-            raise serializers.ValidationError("Income from this source already exists for this month")
+        if Income.objects.filter(
+            user=user,
+            source=source,
+            month=month,
+            year=year
+        ).exists():
+            raise serializers.ValidationError(
+                "Income from this source already exists for this month"
+            )
 
         return data
 

@@ -25,16 +25,18 @@ class AddIncome(APIView):
     permission_classes=[IsAuthenticated]
     renderer_classes=[JSONRenderer]
     def post(self,request):
-        # data=request.data.copy()
-        # data['user'] = request.user.id
-        serializer=IncomeSerializer(data=request.data.copy())
+        serializer=IncomeSerializer(
+            data=request.data,
+            context={"request":request}
+        )
+        
         if serializer.is_valid():
             income=serializer.save(user=request.user)
             
             # update wallet
             SpilitIncome(request.user,income.amount)
             return Response({
-            "msg":"Income added successfully and wallet updated successfully"
+                "msg":"Income added successfully and wallet updated successfully"
             },status=status.HTTP_200_OK)
         
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
