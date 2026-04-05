@@ -48,6 +48,14 @@ function DashboardLayout({ children }: Props) {
             <Link to="/expenses" className="block py-2 hover:text-purple-400">
               Expenses
             </Link>
+            <Link to="/recurring" className="block py-2 hover:text-purple-400">
+              EMI
+            </Link>
+            <Link to="/goals" className="block py-2 hover:text-purple-400">
+              FD
+            </Link>
+            
+
           </nav>
         </div>
 

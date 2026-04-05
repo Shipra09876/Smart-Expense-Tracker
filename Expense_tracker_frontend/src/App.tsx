@@ -12,6 +12,12 @@ import AddIncome from "./pages/AddIncome";
 import WalletCard from "./pages/WalletCard";
 import Expense from "./pages/Expense";
 import EditIncome from "./pages/EditIncome";
+import EditExpense from "./pages/EditExpense";
+import AddExpense from "./pages/AddExpense";
+import Recurring from "./pages/Recurring";
+import AddRecurring from "./pages/AddRecurring";
+import Goals from "./pages/Goals";
+import AddGoal from "./pages/AddGoal";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -73,7 +79,36 @@ function App() {
         />
         <Route path="/add-income" element={<AddIncome />} />
         <Route path="/otp-login" element={<OtpLogin />} />
-        <Route path="/edit-income/:id" element={<EditIncome />} />
+        <Route path="/add-expense" element={<AddExpense />} />
+        <Route
+          path="/edit-expense/:id"
+          element={
+            <ProtectedRoute>
+              <EditExpense />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/recurring"
+          element={
+            <ProtectedRoute>
+              <Recurring />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/add-recurring" element={<AddRecurring />} />
+
+        <Route
+          path="/goals"
+          element={
+            <ProtectedRoute>
+              <Goals />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/add-goal" element={<AddGoal />} />
       </Routes>
     </BrowserRouter>
   );

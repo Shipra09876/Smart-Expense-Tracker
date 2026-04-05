@@ -298,9 +298,12 @@ class AddRecurringExpense(APIView):
     renderer_classes=[JSONRenderer]
 
     def post(self,request):
-        serializer=RecurringExpenseSerializer(data=request.data)
+        serializer = RecurringExpenseSerializer(
+            data=request.data,
+            context={"request": request}   # 🔥 THIS IS THE FIX
+            )
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             return Response({
                 "msg":"Add Recurring expense successfully",
                 "data":serializer.data
@@ -324,11 +327,10 @@ class RecurringExpenseById(APIView):
 
 # return only 1 expenses of logged-in-user by id
     def get(self,request,pk):
-        expense=RecurringExpense.objects.get(user=request.user,pk=pk)
-        if not expense:
-            return Response({
-                "Error":"Not Found"
-            },status=status.HTTP_404_NOT_FOUND)
+        try:
+            expense = RecurringExpense.objects.get(user=request.user, pk=pk)
+        except RecurringExpense.DoesNotExist:
+            return Response({"error": "Not Found"}, status=404)
 
         serializer=RecurringExpenseSerializer(expense)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -343,7 +345,7 @@ class RecurringExpenseById(APIView):
         
         serializer=RecurringExpenseSerializer(instance=expense,data=request.data,partial=True)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             return Response(serializer.data)
         
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

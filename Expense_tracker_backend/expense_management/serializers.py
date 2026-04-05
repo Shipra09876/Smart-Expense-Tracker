@@ -16,6 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ExpenseSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(write_only=True, required=False)
+    category = serializers.CharField(source="category.category_name", read_only=True)
 
     class Meta:
         model = Expense
@@ -37,14 +38,20 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         category_name = validated_data.pop("category_name", None)
+        user = self.context["request"].user
+
         if category_name:
             category, created = Category.objects.get_or_create(
-                category_name=category_name, user=self.context["request"].user
+                category_name=category_name, user=user
             )
-            validated_data["category"] = category
+            instance.category = category
 
-        return super().update(instance, validated_data)
+        # update remaining fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
 
+        instance.save()
+        return instance
 
 
 class IncomeSerializer(serializers.ModelSerializer):
@@ -92,15 +99,30 @@ class WalletSerializer(serializers.ModelSerializer):
         read_only_fields=['main_balance','saving_balance']
 
 class RecurringExpenseSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    next_due_date = serializers.DateField(required=False, allow_null=True)
+
     class Meta:
-        model=RecurringExpense
-        fields=['user','name','emi_amount','start_date','end_date','active','next_due_date']
+        model = RecurringExpense
+        fields = [
+            'id',
+            'user',
+            'name',
+            'emi_amount',
+            'frequency',
+            'start_date',
+            'end_date',
+            'active',
+            'next_due_date'
+        ]
+        extra_kwargs = {
+            "user": {"required": False},   # 🔥 IMPORTANT
+        }
 
     def create(self, validated_data):
-            # set next_due_date automatically from start_date if not provided
-            if not validated_data.get("next_due_date"):
-                validated_data["next_due_date"] = validated_data.get("start_date")
-            return super().create(validated_data)
+        if not validated_data.get("next_due_date"):
+            validated_data["next_due_date"] = validated_data.get("start_date")
+        return super().create(validated_data)
 
 class FDSerializer(serializers.ModelSerializer):
     class Meta:
