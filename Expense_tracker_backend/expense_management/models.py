@@ -101,10 +101,10 @@ class RecurringExpense(models.Model):
     user=models.ForeignKey(User,related_name="recurring_expense",on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
     emi_amount=models.DecimalField(max_digits=12,decimal_places=2,default=0.00)
-    Choices=[
-        ("Daily","daily"),
-        ("Monthly","monthly"),
-        ("Yearly","yearly")
+    Choices = [
+        ("daily", "Daily"),
+        ("monthly", "Monthly"),
+        ("yearly", "Yearly")
     ]
     frequency=models.CharField(max_length=120,choices=Choices)
     start_date=models.DateField()
